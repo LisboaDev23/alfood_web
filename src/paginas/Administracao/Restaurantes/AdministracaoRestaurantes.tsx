@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import IRestaurante from "../../interfaces/IRestaurante";
+import IRestaurante from "../../../interfaces/IRestaurante";
 import {
   Button,
   Paper,
@@ -10,17 +10,16 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { httpAdmin } from "../../../http";
 
 const AdministracaoRestaurantes = () => {
-  const urlAdmin = "http://localhost:8000/api/v2/restaurantes/";
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
 
   const excluirRestaurante = (id: number) => {
     if (window.confirm("Deseja realmente excluir este restaurante?")) {
-      axios
-        .delete(urlAdmin + `${id}/`)
+      httpAdmin
+        .delete(`restaurantes/${id}/`)
         .then(() => {
           const listaRestaurantes = restaurantes.filter(
             (restaurante) => restaurante.id !== id
@@ -36,7 +35,7 @@ const AdministracaoRestaurantes = () => {
   };
 
   useEffect(() => {
-    axios.get<IRestaurante[]>(urlAdmin).then((response) => {
+    httpAdmin.get<IRestaurante[]>("restaurantes/").then((response) => {
       setRestaurantes(response.data);
     });
   }, []);
